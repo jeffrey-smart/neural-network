@@ -2,9 +2,14 @@
 import numpy as np
 import scipy.special as ss
 
+## initialize constants
+cost = 0                               # cost => J(Theta) in notes
 k = 10                                 # number of classes
+learn_rate = 0.1                       # learning rate, to update weight matrices
 m = 5000                               # number of training examples
 n1 = 400                               # pixels per training image
+n2 = 25                                # number of nodes in Hidden Layer (not counting bias node)
+n3 = k                                 # number of nodes (classes) in the Output Layer
 
 x = np.zeros((m, n1), dtype=float)     # holds all training data
 y = np.zeros((m, k), dtype=int)        # holds all labels
