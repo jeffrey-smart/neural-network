@@ -11,8 +11,29 @@ n1 = 400                               # pixels per training image
 n2 = 25                                # number of nodes in Hidden Layer (not counting bias node)
 n3 = k                                 # number of nodes (classes) in the Output Layer
 
-x = np.zeros((m, n1), dtype=float)     # holds all training data
-y = np.zeros((m, k), dtype=int)        # holds all labels
+## initialize data structures that define the neural network
+# training data (input data)
+x = np.zeros((m, n1), dtype=float)               # holds all training data
+y = np.zeros((m, k), dtype=int)                  # holds all labels
+
+# neural network - Input Layer
+a1 = np.zeros(n1+1, dtype=float)                 # '+1' for bias node
+
+theta1 = np.zeros((n2, n1+1), dtype = float)     # weights: Input to Hidden Layer
+grad1  = np.zeros((n2, n1+1), dtype = float)     # gradient of cost function
+
+# neural network - Hidden Layer
+z2 = np.zeros(n2+1, dtype=float)                 # values; '+1' for bias node (not used)
+a2 = np.zeros(n2+1, dtype=float)                 # activations; '+1' for bias node
+delta2 = np.zeros(n2+1, dtype=float)             # errors; '+1' for bias node (not used)
+
+theta2 = np.zeros((n3, n2+1), dtype=float)       # weights: Hidden to Output Layer
+grad2 =  np.zeros((n3, n2+1), dtype=float)       # gradient of cost function
+
+# neural network - Output Layer
+z3 = np.zeros(n3, dtype=float)                   # values (no bias node)
+z3 = np.zeros(n3, dtype=float)                   # activations
+delta3 = np.zeros(n3, dtype=float)               # errors
 
 def read_x(x, filename, m, n1):
     """ read in the training images (i.e., the x data)
@@ -51,7 +72,7 @@ print(x.shape, np.sum(x))              # temp printing statement
 read_y(y, '../../input-data-nn/y.csv', m, k)
 print(y.shape, np.sum(y))              # temp printing statement
 
-# initialize constants
+# initialize constants - DONE
 # initialize data structures that define the neural network
 # import training data: x, y
 # initialize weights (once per program)
