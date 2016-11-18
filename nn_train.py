@@ -40,10 +40,10 @@ def read_y(y, filename, m, k):
     f.close()
     assert y.shape == (m, k), "error reading training labels"
 
-read_x(x, '../data/x.csv', m, n1)
+read_x(x, '../../input-data-nn/x.csv', m, n1)
 print(x.shape, np.sum(x))              # temp printing statement
 
-read_y(y, '../data/y.csv', m, k)
+read_y(y, '../../input-data-nn/y.csv', m, k)
 print(y.shape, np.sum(y))              # temp printing statement
 
 # initialize constants
