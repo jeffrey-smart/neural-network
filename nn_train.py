@@ -35,6 +35,10 @@ z3 = np.zeros(n3, dtype=float)                   # values (no bias node)
 z3 = np.zeros(n3, dtype=float)                   # activations
 delta3 = np.zeros(n3, dtype=float)               # errors
 
+## initialize the weights: theta1 and theta2     # one-time initialization
+theta1 = np.random.uniform(low=-0.1, high=0.1, size=(n2, n1+1))
+theta2 = np.random.uniform(low=-0.1, high=0.1, size=(n3, n2+1))
+
 def read_x(x, filename, m, n1):
     """ read in the training images (i.e., the x data)
     """
@@ -73,8 +77,8 @@ read_y(y, '../../input-data-nn/y.csv', m, k)
 print(y.shape, np.sum(y))              # temp printing statement
 
 # initialize constants - DONE
-# initialize data structures that define the neural network
-# import training data: x, y
+# initialize data structures that define the neural network - DONE
+# import training data: x, y - DONE
 # initialize weights (once per program)
 # epoch loop
 
