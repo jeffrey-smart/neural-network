@@ -1,4 +1,7 @@
 
+# TODO:  divide cost, gradient by size of mini-batch, not size of input data!!
+# I think cost should be independent of number of mini-batches
+
 import numpy as np
 import scipy.special as ss
 
@@ -11,7 +14,7 @@ n1 = 400                               # pixels per training image
 n2 = 25                                # number of nodes in Hidden Layer (not counting bias node)
 n3 = k                                 # number of nodes (classes) in the Output Layer
 
-ep_cnt = 5                             # epoch count (number of passes over the training data set
+ep_cnt = 100                             # epoch count (number of passes over the training data set
 mb_cnt = 10                            # number of mini-batches
 td_cnt = m // mb_cnt                   # number of training data points per mini-batch
 
@@ -121,7 +124,7 @@ for ep_idx in range(ep_cnt):
             delta2[0] = np.nan
 
             # part 4:  accumulate cost and gradient
-            cost  -= np.dot(y[i, :], np.log(a3)) + np.dot((1 - y[i, :]), np.log(1 - a3))
+            cost  -= np.dot(y[i, :], np.log(a3)) + np.dot((np.ones(k) - y[i, :]), np.log(np.ones(k) - a3))
             grad1 += np.outer(delta2[1:], np.transpose(a1))
             grad2 += np.outer(delta3, np.transpose(a2))
 
@@ -130,21 +133,27 @@ for ep_idx in range(ep_cnt):
         # print(y[i,:])
 
         # part 5:  obtain cost and gradients for this mini-batch
-        cost = cost / m + \
-               learn_rate / (2 * m) * np.sum(mask1 * np.square(theta1)) + \
-               learn_rate / (2 * m) * np.sum(mask2 * np.square(theta2))
+        cost = cost / td_cnt + \
+               learn_rate / (2 * td_cnt) * np.sum(mask1 * np.square(theta1)) + \
+               learn_rate / (2 * td_cnt) * np.sum(mask2 * np.square(theta2))
 
         # print(ep_idx, mb_idx, cost)
         print('{:4d} {:4d} {:6.3f}'.format(ep_idx, mb_idx, cost))
 
-        grad1 = grad1 / m + (learn_rate / m) * theta1 * mask1
-        grad2 = grad2 / m + (learn_rate / m) * theta2 * mask2
+        grad1 = grad1 / td_cnt + (learn_rate / td_cnt) * theta1 * mask1
+        grad2 = grad2 / td_cnt + (learn_rate / td_cnt) * theta2 * mask2
 
         # part 6: update weights
         theta1 -= learn_rate * grad1
         theta2 -= learn_rate * grad2
 
+        # TODO: export weight vectors for later use
 
+        # print some predictions
+        # print(" -- prediction --")
+        # print(a3)
+
+# TODO:  make prediction for entire input data; compare label vs. prediction
 
 # initialize constants - DONE
 # initialize data structures that define the neural network - DONE
@@ -168,6 +177,33 @@ for ep_idx in range(ep_cnt):
 #   ...next mini-batch
 
 # next epoch
-# export weight matrices
 
-## 12:13 pm on Nov 18
+# TODO - export weight matrices
+
+a1 = x;
+print(x.shape, " = x.shape")
+print(a1.shape, " = a1.shape")
+
+z2 = np.dot(a1, np.transpose(theta1))
+print(z2.shape, " = z2.shape")
+
+a2 = ss.expit(z2)
+a2 = np.insert(a2, 0, 1, axis=1)
+print(a2.shape, " = a2.shape")
+
+z3 = np.dot(a2, np.transpose(theta2))
+print(z3.shape, " = z3.shape")
+
+a3 = ss.expit(z3)
+print(a3.shape, " = a3.shape")
+
+actual_idx = np.argmax(y, axis=1)
+print(actual_idx.shape, " = actual_idx.shape")
+
+predict_idx = np.argmax(a3, axis=1)
+print(predict_idx.shape, " predict_idx.shape")
+
+correct = np.count_nonzero(actual_idx == predict_idx)
+print(correct, " = number of correct in training analysis")
+print(correct / m, " = training accuracy")
+print(ep_cnt, " = number of epochs")
