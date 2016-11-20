@@ -17,7 +17,7 @@ n1 = 400                               # pixels per training image
 n2 = 25                                # number of nodes in Hidden Layer (not counting bias node)
 n3 = k                                 # number of nodes (classes) in the Output Layer
 
-ep_cnt = 1                             # epoch count (number of passes over the training data set
+ep_cnt = 512                             # epoch count (number of passes over the training data set
 mb_cnt = 10                            # number of mini-batches
 td_cnt = m // mb_cnt                   # number of training data points per mini-batch
 
