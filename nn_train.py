@@ -4,6 +4,9 @@
 
 import numpy as np
 import scipy.special as ss
+import time
+
+t_start = time.process_time()
 
 ## initialize constants
 cost = 0                               # cost => J(Theta) in notes
@@ -14,7 +17,7 @@ n1 = 400                               # pixels per training image
 n2 = 25                                # number of nodes in Hidden Layer (not counting bias node)
 n3 = k                                 # number of nodes (classes) in the Output Layer
 
-ep_cnt = 100                             # epoch count (number of passes over the training data set
+ep_cnt = 512                             # epoch count (number of passes over the training data set
 mb_cnt = 10                            # number of mini-batches
 td_cnt = m // mb_cnt                   # number of training data points per mini-batch
 
@@ -138,7 +141,7 @@ for ep_idx in range(ep_cnt):
                learn_rate / (2 * td_cnt) * np.sum(mask2 * np.square(theta2))
 
         # print(ep_idx, mb_idx, cost)
-        print('{:4d} {:4d} {:6.3f}'.format(ep_idx, mb_idx, cost))
+        # print('{:4d} {:4d} {:6.3f}'.format(ep_idx, mb_idx, cost))
 
         grad1 = grad1 / td_cnt + (learn_rate / td_cnt) * theta1 * mask1
         grad2 = grad2 / td_cnt + (learn_rate / td_cnt) * theta2 * mask2
@@ -207,3 +210,6 @@ correct = np.count_nonzero(actual_idx == predict_idx)
 print(correct, " = number of correct in training analysis")
 print(correct / m, " = training accuracy")
 print(ep_cnt, " = number of epochs")
+
+t_end = time.process_time()
+print("time = ", t_end - t_start)
