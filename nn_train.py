@@ -18,7 +18,7 @@ n1 = 28 * 28                           # pixels per training image
 n2 = 25                                # number of nodes in Hidden Layer (not counting bias node)
 n3 = k                                 # number of nodes (classes) in the Output Layer
 
-ep_cnt = 64                            # epoch count (number of passes over the training data set
+ep_cnt = 32                            # epoch count (number of passes over the training data set
 mb_cnt = 600                           # number of mini-batches
 td_cnt = m // mb_cnt                   # number of training data points per mini-batch
 
@@ -259,3 +259,32 @@ print('{:4d} epochs | {:6.1f} sec | {:6.1f} sec / epoch | {:6.3f} accuracy | {:6
 
 # possible tutorial for running with numba
 #   http://numba.pydata.org/numba-doc/0.6/doc/examples.html
+
+#  Massively parallel programming with GPUs
+#  https://people.duke.edu/~ccc14/sta-663/CUDAPython.html
+
+#  Many Mandelbrot implementations (naive, numpy, compiled, gpu, etc.
+#  http://www.vallis.org/salon/summary-10.html
+
+#  How To Quickly Compute The Mandelbrot Set In Python
+#  https://www.ibm.com/developerworks/community/blogs/jfp/entry/How_To_Compute_Mandelbrodt_Set_Quickly?lang=en
+
+
+#  sample output
+#
+# /Users/jsmart/anaconda/bin/python3 "/Users/jsmart/Documents/Documents - Jeffrey’s MacBook Pro/MSFE/M389 HPC/neural-network-project/src-code-nn/neural-network/nn_train.py"
+# (60000, 785)  = x.shape
+# (60000, 785)  = a1.shape
+# (60000, 25)  = z2.shape
+# (60000, 26)  = a2.shape
+# (60000, 10)  = z3.shape
+# (60000, 10)  = a3.shape
+# (60000,)  = actual_idx.shape
+# (60000,)  predict_idx.shape
+# 54385  = number of correct in training analysis
+# 0.9064166666666666  = training accuracy
+# 32  = number of epochs
+# time =  2226.3101269999997
+#   32 epochs | 2226.3 sec |   69.6 sec / epoch |  0.906 accuracy |  572.5 = wall clock time |   3.89
+#
+#  Process finished with exit code 0
