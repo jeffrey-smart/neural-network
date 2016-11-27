@@ -7,18 +7,19 @@ import scipy.special as ss
 import time
 
 t_start = time.process_time()
+wall_clock_start = time.time()
 
 ## initialize constants
 cost = 0                               # cost => J(Theta) in notes
 k = 10                                 # number of classes
 learn_rate = 0.500                     # learning rate, to update weight matrices
-m = 5000                               # number of training examples
-n1 = 400                               # pixels per training image
+m = 60000                              # number of training examples
+n1 = 28 * 28                           # pixels per training image
 n2 = 25                                # number of nodes in Hidden Layer (not counting bias node)
 n3 = k                                 # number of nodes (classes) in the Output Layer
 
-ep_cnt = 512                             # epoch count (number of passes over the training data set
-mb_cnt = 10                            # number of mini-batches
+ep_cnt = 32                            # epoch count (number of passes over the training data set
+mb_cnt = 600                           # number of mini-batches
 td_cnt = m // mb_cnt                   # number of training data points per mini-batch
 
 ## initialize data structures that define the neural network
@@ -90,9 +91,38 @@ def read_y(y, filename, m, k):
     f.close()
     assert y.shape == (m, k), "error reading training labels"
 
-read_x(x, '../../input-data-nn/x.csv', m, n1)
 
-read_y(y, '../../input-data-nn/y.csv', m, k)
+def read_mnist(filename, x_array, x_rows, x_cols, y_array, y_rows, y_cols):
+    """
+    caller allocates memory for 'x' and 'y' and provides filename
+    this function reads the file and populates the arrays
+    :param filename:
+    :param x_array:
+    :param x_rows:
+    :param x_cols:
+    :param y_array:
+    :param y_rows:
+    :param y_cols:
+    :return:
+    """
+
+    f = open(filename)
+
+    i = 0
+    for line in f:
+        tmp = line.strip().split(',')
+        y[i, int(tmp[0])] = 1
+        x[i, :] = np.array(tmp[1:], dtype = float) / 255.0 # normalize: 0 = white; 1 = black
+        i += 1
+
+    f.close()
+    assert x.shape == (x_rows, x_cols), "error reading MNIST data (x)"
+    assert y.shape == (y_rows, y_cols), "error reading MNIST data(y)"
+
+read_mnist('../../input-data-nn/mnist_train.csv', x, m, n1, y, m, k)
+
+# read_x(x, '../../input-data-nn/x.csv', m, n1)
+# read_y(y, '../../input-data-nn/y.csv', m, k)
 
 # add bias node to training data
 x = np.insert(x, 0, 1, axis=1)
@@ -212,4 +242,49 @@ print(correct / m, " = training accuracy")
 print(ep_cnt, " = number of epochs")
 
 t_end = time.process_time()
+wall_clock_end = time.time()
+
+elapsed = t_end - t_start
+
 print("time = ", t_end - t_start)
+
+print('{:4d} epochs | {:6.1f} sec | {:6.1f} sec / epoch | {:6.3f} accuracy | {:6.1f} = wall clock time | {:6.2f}'.format(
+    ep_cnt,
+    elapsed,
+    elapsed / float(ep_cnt),
+    float(correct) / float(m),
+    wall_clock_end - wall_clock_start,
+    elapsed / (wall_clock_end - wall_clock_start)
+))
+
+# possible tutorial for running with numba
+#   http://numba.pydata.org/numba-doc/0.6/doc/examples.html
+
+#  Massively parallel programming with GPUs
+#  https://people.duke.edu/~ccc14/sta-663/CUDAPython.html
+
+#  Many Mandelbrot implementations (naive, numpy, compiled, gpu, etc.
+#  http://www.vallis.org/salon/summary-10.html
+
+#  How To Quickly Compute The Mandelbrot Set In Python
+#  https://www.ibm.com/developerworks/community/blogs/jfp/entry/How_To_Compute_Mandelbrodt_Set_Quickly?lang=en
+
+
+#  sample output
+#
+# /Users/jsmart/anaconda/bin/python3 "/Users/jsmart/Documents/Documents - Jeffrey’s MacBook Pro/MSFE/M389 HPC/neural-network-project/src-code-nn/neural-network/nn_train.py"
+# (60000, 785)  = x.shape
+# (60000, 785)  = a1.shape
+# (60000, 25)  = z2.shape
+# (60000, 26)  = a2.shape
+# (60000, 10)  = z3.shape
+# (60000, 10)  = a3.shape
+# (60000,)  = actual_idx.shape
+# (60000,)  predict_idx.shape
+# 54385  = number of correct in training analysis
+# 0.9064166666666666  = training accuracy
+# 32  = number of epochs
+# time =  2226.3101269999997
+#   32 epochs | 2226.3 sec |   69.6 sec / epoch |  0.906 accuracy |  572.5 = wall clock time |   3.89
+#
+#  Process finished with exit code 0
